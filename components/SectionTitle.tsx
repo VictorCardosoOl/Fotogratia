@@ -38,7 +38,7 @@ const SectionTitle: React.FC<SectionTitleProps> = ({
          <motion.span 
             variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="text-secondary uppercase tracking-[0.3em] text-[9px] font-medium"
+            className="text-secondary uppercase tracking-[0.3em] text-[9px] font-semibold"
          >
             {subtitle}
          </motion.span>
@@ -52,7 +52,7 @@ const SectionTitle: React.FC<SectionTitleProps> = ({
       <div className="relative">
         <SplitText 
             tag="h2" 
-            className="text-4xl md:text-6xl lg:text-7xl font-serif text-white font-light italic leading-[1.1]"
+            className="text-4xl md:text-6xl lg:text-7xl font-serif text-primary font-light italic leading-[1.1]"
         >
             {title}
         </SplitText>

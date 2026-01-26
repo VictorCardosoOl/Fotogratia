@@ -1,37 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import Layout from '../components/Layout';
 import Button from '../components/Button';
-import Reveal from '../components/Reveal';
 import SplitText from '../components/SplitText';
 import { PHOTOS } from '../constants';
+
+const CATEGORIES = ['wedding', 'portrait', 'commercial', 'editorial'];
 
 const Portfolio: React.FC = () => {
   const navigate = useNavigate();
   const [activeCategories, setActiveCategories] = useState<string[]>([]);
-  const categories = ['wedding', 'portrait', 'commercial', 'editorial'];
 
-  const toggleCategory = (cat: string) => {
-    setActiveCategories(prev => {
-      if (prev.includes(cat)) {
-        return prev.filter(c => c !== cat);
-      } else {
-        return [...prev, cat];
-      }
-    });
-  };
+  const toggleCategory = useCallback((cat: string) => {
+    setActiveCategories(prev => 
+      prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]
+    );
+  }, []);
 
-  const clearFilters = () => setActiveCategories([]);
+  const clearFilters = useCallback(() => setActiveCategories([]), []);
 
-  const filteredPhotos = activeCategories.length === 0
-    ? PHOTOS 
-    : PHOTOS.filter(photo => activeCategories.includes(photo.category));
+  const filteredPhotos = useMemo(() => {
+    if (activeCategories.length === 0) return PHOTOS;
+    return PHOTOS.filter(photo => activeCategories.includes(photo.category));
+  }, [activeCategories]);
+
+  const getGridClass = useCallback((index: number) => {
+     return (index + 1) % 3 === 0 ? "md:col-span-2 aspect-[16/9]" : "md:col-span-1 aspect-[3/4]";
+  }, []);
 
   return (
     <Layout>
-      {/* Minimal Header */}
-      <div className="bg-black text-white pt-40 pb-20 relative border-b border-white/5">
+      <div className="bg-background text-primary pt-40 pb-20 relative border-b border-primary/5">
         <div className="container flex flex-col md:flex-row justify-between items-end relative z-10 px-6">
           <div>
               <motion.span 
@@ -42,7 +42,7 @@ const Portfolio: React.FC = () => {
                   Curated Works
               </motion.span>
               <div className="overflow-hidden">
-                <SplitText tag="h1" className="text-6xl md:text-8xl font-serif italic text-white tracking-tighter">
+                <SplitText tag="h1" className="text-6xl md:text-8xl font-serif italic text-primary tracking-tighter">
                     Archive
                 </SplitText>
               </div>
@@ -58,24 +58,23 @@ const Portfolio: React.FC = () => {
         </div>
       </div>
 
-      <div className="min-h-screen bg-black pt-16 pb-24">
+      <div className="min-h-screen bg-background pt-16 pb-24">
         <div className="container px-6">
             
-          {/* Filters - Minimal Text */}
           <div className="flex flex-wrap gap-8 mb-20 items-center">
-            <span className="text-white/30 text-[10px] uppercase tracking-widest mr-4">Filter By:</span>
+            <span className="text-secondary/50 text-[10px] uppercase tracking-widest mr-4">Filter By:</span>
             <button
                 onClick={clearFilters}
                 className={`text-[10px] uppercase tracking-[0.2em] transition-all duration-300 border-b border-transparent ${
                 activeCategories.length === 0
-                    ? 'text-white border-accent'
-                    : 'text-secondary hover:text-white'
+                    ? 'text-primary border-accent font-bold'
+                    : 'text-secondary hover:text-primary'
                 }`}
             >
                 All
             </button>
 
-            {categories.map((cat) => {
+            {CATEGORIES.map((cat) => {
                 const isActive = activeCategories.includes(cat);
                 return (
                 <button
@@ -83,8 +82,8 @@ const Portfolio: React.FC = () => {
                     onClick={() => toggleCategory(cat)}
                     className={`text-[10px] uppercase tracking-[0.2em] transition-all duration-300 border-b border-transparent ${
                     isActive
-                        ? 'text-white border-accent'
-                        : 'text-secondary hover:text-white'
+                        ? 'text-primary border-accent font-bold'
+                        : 'text-secondary hover:text-primary'
                     }`}
                 >
                     {cat}
@@ -93,13 +92,12 @@ const Portfolio: React.FC = () => {
             })}
           </div>
 
-          {/* Artistic Grid */}
           <motion.div 
             layout
-            className="columns-1 md:columns-2 lg:columns-3 gap-12 space-y-12"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12"
           >
             <AnimatePresence mode="popLayout">
-              {filteredPhotos.map((photo) => (
+              {filteredPhotos.map((photo, index) => (
                 <motion.div 
                   layout
                   initial={{ opacity: 0, y: 50, filter: 'blur(10px)' }}
@@ -107,30 +105,25 @@ const Portfolio: React.FC = () => {
                   exit={{ opacity: 0, filter: 'blur(5px)', scale: 0.95, transition: { duration: 0.3 } }}
                   transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                   key={photo.id} 
-                  className="break-inside-avoid group relative cursor-pointer"
+                  className={`break-inside-avoid group relative cursor-pointer ${getGridClass(index)}`}
                 >
-                  <div className="overflow-hidden relative bg-surface">
-                      {/* Interaction: Scale and Grayscale removal on hover */}
+                  <div className="w-full h-full overflow-hidden relative bg-surface shadow-md">
                       <img 
                         src={photo.url} 
                         alt={photo.title} 
-                        className="w-full h-auto object-cover grayscale-[80%] group-hover:grayscale-0 scale-100 group-hover:scale-105 transition-all duration-[1s] ease-[0.22,1,0.36,1]"
+                        className="w-full h-full object-cover grayscale-[80%] group-hover:grayscale-0 scale-100 group-hover:scale-105 transition-all duration-[1s] ease-[0.22,1,0.36,1]"
                         loading="lazy"
                       />
-                      
-                      {/* Slight darkened overlay that lifts on hover for clarity */}
                       <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-700 pointer-events-none" />
                   </div>
 
-                  {/* Interaction: Slide UP from bottom and fade in text */}
-                  {/* Using translate-y-full to start from bottom, animating to 0 */}
-                  <div className="mt-4 flex justify-between items-start overflow-hidden">
+                  <div className="absolute bottom-6 left-6 right-6 flex justify-between items-end overflow-hidden pointer-events-none">
                     <div className="transform translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-700 ease-[0.22,1,0.36,1]">
-                         <h3 className="text-xl font-serif italic text-white">{photo.title}</h3>
+                         <h3 className="text-2xl font-serif italic text-white drop-shadow-md">{photo.title}</h3>
                     </div>
                     
                     <div className="transform translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-700 delay-75 ease-[0.22,1,0.36,1]">
-                        <span className="text-[9px] uppercase tracking-widest text-secondary border border-white/20 px-2 py-1 rounded-full">
+                        <span className="text-[9px] uppercase tracking-widest text-white border border-white/50 px-2 py-1 rounded-full backdrop-blur-sm bg-black/20">
                             {photo.category}
                         </span>
                     </div>
@@ -140,15 +133,14 @@ const Portfolio: React.FC = () => {
             </AnimatePresence>
           </motion.div>
 
-          {/* CTA */}
           <motion.div 
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="mt-40 text-center border-t border-white/5 pt-20"
+            className="mt-40 text-center border-t border-primary/5 pt-20"
           >
-            <h3 className="text-3xl font-serif italic text-white mb-6">Create with us.</h3>
-            <Button variant="text" onClick={() => navigate('/contact')} className="text-lg">Start Project</Button>
+            <h3 className="text-3xl font-serif italic text-primary mb-6">Create with us.</h3>
+            <Button variant="text" onClick={() => navigate('/contact')} className="text-lg text-primary hover:text-accent">Start Project</Button>
           </motion.div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Check } from 'lucide-react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
@@ -7,17 +7,9 @@ import SectionTitle from '../components/SectionTitle';
 import Button from '../components/Button';
 import { SERVICES } from '../constants';
 
-const SPRING_PHYSICS = { 
-  type: "spring", 
-  stiffness: 300, 
-  damping: 20,
-  mass: 0.8 
-};
-
-// Custom bezier for that "heavy" physical feel
 const HEAVY_EASE = [0.22, 1, 0.36, 1];
 
-const cardVariants: Variants = {
+const CARD_VARIANTS: Variants = {
   initial: { opacity: 0, scale: 0.95, y: 40 },
   animate: { 
     opacity: 1, 
@@ -34,20 +26,20 @@ const cardVariants: Variants = {
     transition: { duration: 0.3 } 
   },
   hover: { 
-    scale: 1.03, // 3% scale as requested
+    scale: 1.03,
     y: -10,
-    borderColor: "#7F1D1D", // Accent color on hover
-    boxShadow: "0px 25px 50px -12px rgba(0, 0, 0, 0.5)", // Subtle, physical shadow
-    transition: SPRING_PHYSICS 
+    borderColor: "#8C7D6E",
+    boxShadow: "0px 25px 50px -12px rgba(140, 125, 110, 0.2)",
+    transition: { type: "spring", stiffness: 300, damping: 20, mass: 0.8 } 
   }
 };
 
-const textGroupVariants: Variants = {
+const TEXT_GROUP_VARIANTS: Variants = {
   hover: { transition: { staggerChildren: 0.05 } },
   idle: {}
 };
 
-const contentVariants: Variants = {
+const CONTENT_VARIANTS: Variants = {
   hover: { 
     y: -2, 
     x: 4,
@@ -56,14 +48,24 @@ const contentVariants: Variants = {
   idle: { y: 0, x: 0, transition: { type: "spring", stiffness: 400, damping: 15 } }
 };
 
+const WORKFLOW_STEPS = [
+    { step: '01', title: 'Connect', desc: 'Inquiry form & consultation.' },
+    { step: '02', title: 'Plan', desc: 'Mood board & shot list creation.' },
+    { step: '03', title: 'Create', desc: 'The shoot day experience.' },
+    { step: '04', title: 'Deliver', desc: 'Retouching & final delivery.' }
+];
+
+const CATEGORIES = ['all', 'wedding', 'portrait', 'commercial'];
+
 const Services: React.FC = () => {
   const navigate = useNavigate();
   const [filter, setFilter] = useState<string>('all');
-  const categories = ['all', 'wedding', 'portrait', 'commercial'];
 
-  const filteredServices = filter === 'all' 
-    ? SERVICES 
-    : SERVICES.filter(service => service.id === filter);
+  const filteredServices = useMemo(() => {
+    return filter === 'all' 
+        ? SERVICES 
+        : SERVICES.filter(service => service.id === filter);
+  }, [filter]);
 
   return (
     <Layout>
@@ -78,7 +80,7 @@ const Services: React.FC = () => {
 
       <div className="container pb-24 bg-background">
         <div className="flex flex-wrap justify-center gap-2 md:gap-4 mb-16 md:mb-20">
-          {categories.map((cat) => (
+          {CATEGORIES.map((cat) => (
             <button
               key={cat}
               onClick={() => setFilter(cat)}
@@ -110,7 +112,7 @@ const Services: React.FC = () => {
                 <motion.div 
                   layout
                   key={service.id}
-                  variants={cardVariants}
+                  variants={CARD_VARIANTS}
                   initial="initial"
                   animate="animate"
                   exit="exit"
@@ -122,26 +124,26 @@ const Services: React.FC = () => {
                   className={`relative flex flex-col p-8 md:p-10 transition-colors duration-300 group h-full rounded-sm border ${
                       isFeatured 
                       ? 'bg-primary text-white border-primary z-10' 
-                      : 'bg-white text-primary border-white/10'
+                      : 'bg-surface text-primary border-primary/10'
                   }`}
                 >
-                  <motion.div variants={textGroupVariants}>
+                  <motion.div variants={TEXT_GROUP_VARIANTS}>
                     <motion.h3 
-                      variants={contentVariants} 
+                      variants={CONTENT_VARIANTS} 
                       className="text-xl md:text-2xl font-serif font-medium mb-4"
                     >
                       {service.title}
                     </motion.h3>
                     
                     <motion.p 
-                      variants={contentVariants} 
+                      variants={CONTENT_VARIANTS} 
                       className={`text-3xl font-light mb-8 flex items-baseline ${isFeatured ? 'text-white' : 'text-primary'}`}
                     >
                         {service.price}
                     </motion.p>
                     
                     <motion.p 
-                      variants={contentVariants} 
+                      variants={CONTENT_VARIANTS} 
                       className={`text-sm mb-10 leading-relaxed font-light ${isFeatured ? 'text-white/80' : 'text-secondary'}`}
                     >
                         {service.description}
@@ -151,7 +153,7 @@ const Services: React.FC = () => {
                         {service.features.map((feature, idx) => (
                         <motion.li 
                           key={idx} 
-                          variants={contentVariants}
+                          variants={CONTENT_VARIANTS}
                           className="flex items-start"
                         >
                             <Check className={`w-4 h-4 mr-4 flex-shrink-0 ${isFeatured ? 'text-white/70' : 'text-secondary'}`} />
@@ -164,7 +166,7 @@ const Services: React.FC = () => {
                   <Button 
                       variant={isFeatured ? 'outline' : 'primary'} 
                       fullWidth
-                      className={isFeatured ? 'border-white/30 text-white hover:bg-white hover:text-primary' : ''}
+                      className={isFeatured ? 'border-white/30 text-white hover:bg-white hover:text-primary' : 'bg-primary text-white hover:border-accent hover:bg-transparent hover:text-primary'}
                       onClick={() => navigate('/contact')}
                   >
                       {service.cta}
@@ -178,12 +180,7 @@ const Services: React.FC = () => {
         <div className="mt-24 md:mt-40">
             <SectionTitle subtitle="Workflow" title="The Process" />
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 mt-12 md:mt-20">
-                {[
-                    { step: '01', title: 'Connect', desc: 'Inquiry form & consultation.' },
-                    { step: '02', title: 'Plan', desc: 'Mood board & shot list creation.' },
-                    { step: '03', title: 'Create', desc: 'The shoot day experience.' },
-                    { step: '04', title: 'Deliver', desc: 'Retouching & final delivery.' }
-                ].map((item, idx) => (
+                {WORKFLOW_STEPS.map((item, idx) => (
                     <motion.div 
                         key={idx} 
                         initial={{ opacity: 0, y: 40 }}
@@ -192,7 +189,7 @@ const Services: React.FC = () => {
                         transition={{ delay: idx * 0.15, duration: 1.2, ease: HEAVY_EASE }}
                         className="text-center group cursor-default"
                     >
-                        <div className="w-12 h-12 rounded-full border border-accent flex items-center justify-center mx-auto mb-6 text-serif font-serif italic text-xl text-secondary group-hover:border-primary group-hover:text-primary transition-colors duration-500 bg-transparent group-hover:bg-accent/5">
+                        <div className="w-12 h-12 rounded-full border border-accent flex items-center justify-center mx-auto mb-6 text-serif font-serif italic text-xl text-secondary group-hover:border-primary group-hover:text-primary transition-colors duration-500 bg-transparent group-hover:bg-accent/10">
                             {item.step}
                         </div>
                         <h4 className="text-lg font-bold mb-3 text-primary group-hover:translate-y-[-2px] transition-transform duration-300">{item.title}</h4>

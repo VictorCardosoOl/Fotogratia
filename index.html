@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Inter:wght@200;300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Manrope:wght@200;300;400;500;600&display=swap" rel="stylesheet">
     <script>
       tailwind.config = {
         theme: {
@@ -31,21 +31,23 @@
           },
           extend: {
             fontFamily: {
-              sans: ['Inter', 'sans-serif'],
+              sans: ['Manrope', 'sans-serif'],
               serif: ['Cormorant Garamond', 'serif'],
             },
             colors: {
-              // 'Darkroom Cinema' Palette - High Contrast, Moody, Artistic
-              primary: '#E5E5E5', // Ivory/Bone White - Main text
-              secondary: '#A1A1AA', // Cool Zinc Grey - Subtitles
-              accent: '#7F1D1D', // Deep Red/Burgundy - Subtle cinematic accent (like a darkroom light)
-              background: '#050505', // True Black - Deep depth
-              surface: '#121212', // Off-Black - Subtle separation
-              dark: '#000000', // Absolute Black
-              muted: '#52525B', // Dark Grey - Non-essential text
+              // 'Cool Modern' Palette - Elegant, Sophisticated, Slate & Cool Grays
+              primary: '#1E293B', // Slate 800 - Main text
+              secondary: '#64748B', // Slate 500 - Secondary text
+              accent: '#475569', // Slate 600 - Hover states / Interaction
+              background: '#F8FAFC', // Slate 50 - Main Background (Cool White)
+              surface: '#F1F5F9', // Slate 100 - Cards/Sections
+              dark: '#0F172A', // Slate 900 - Dark backgrounds
+              muted: '#CBD5E1', // Slate 300 - Borders/Dividers
+              white: '#FFFFFF',
+              black: '#020617' // Slate 950
             },
             backgroundImage: {
-              'vignette': 'radial-gradient(circle, rgba(0,0,0,0) 50%, rgba(0,0,0,0.8) 100%)',
+              'vignette': 'radial-gradient(circle, rgba(15, 23, 42, 0) 50%, rgba(15, 23, 42, 0.4) 100%)',
             }
           }
         }
@@ -53,12 +55,12 @@
     </script>
     <style>
       :root {
-        --foreground-rgb: 229, 229, 229;
+        --foreground-rgb: 30, 41, 59;
       }
       
       body {
-        background-color: #050505;
-        color: #E5E5E5;
+        background-color: #F8FAFC;
+        color: #1E293B;
         width: 100%;
         min-height: 100vh;
         overflow-x: hidden;
@@ -71,7 +73,7 @@
       .text-fluid-h2 { font-size: clamp(2.5rem, 5vw + 1rem, 5rem); }
       .text-fluid-h3 { font-size: clamp(1.75rem, 3.5vw, 3rem); }
       
-      /* Artistic Film Grain - Heavier, more noticeable for texture */
+      /* Subtle Digital Noise - Reduced opacity for cleaner look */
       .bg-noise {
         position: fixed;
         top: 0;
@@ -79,31 +81,31 @@
         width: 100%;
         height: 100%;
         pointer-events: none;
-        z-index: 50; /* Lowered from 9999 to allow overlays and cursor to sit on top */
-        opacity: 0.07;
+        z-index: 50; 
+        opacity: 0.03;
         background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-        mix-blend-mode: overlay;
+        mix-blend-mode: multiply;
       }
 
-      /* Custom scrollbar - Dark and thin */
+      /* Custom scrollbar - Cool Slate */
       ::-webkit-scrollbar {
         width: 6px;
       }
       ::-webkit-scrollbar-track {
-        background: #050505; 
+        background: #F8FAFC; 
       }
       ::-webkit-scrollbar-thumb {
-        background: #3F3F46; 
+        background: #CBD5E1; 
         border-radius: 0px;
       }
       ::-webkit-scrollbar-thumb:hover {
-        background: #71717A; 
+        background: #64748B; 
       }
       
       /* Cinematic Selection */
       ::selection {
-        background: #7F1D1D;
-        color: white;
+        background: #1E293B;
+        color: #F8FAFC;
       }
     </style>
   <script type="importmap">
