@@ -69,16 +69,16 @@ const Services: React.FC = () => {
 
   return (
     <Layout>
-      <div className="pt-32 md:pt-40 pb-16 md:pb-20 bg-background relative">
+      <div className="pt-32 md:pt-40 pb-section-sm bg-background relative">
         <div className="container relative z-10 text-center">
           <SectionTitle subtitle="Investimento" title="Serviços & Preços" />
-          <p className="text-center text-secondary max-w-2xl mx-auto -mt-6 md:-mt-10 mb-10 md:mb-16 text-base md:text-lg font-light">
+          <p className="text-center text-secondary max-w-2xl mx-auto -mt-6 md:-mt-10 mb-10 md:mb-16 text-body font-light">
             Preços transparentes para memórias atemporais.
           </p>
         </div>
       </div>
 
-      <div className="container pb-24 bg-background">
+      <div className="container pb-section bg-background">
         <div className="flex flex-wrap justify-center gap-2 md:gap-4 mb-16 md:mb-20">
           {CATEGORIES.map((cat) => (
             <button
@@ -130,21 +130,21 @@ const Services: React.FC = () => {
                   <motion.div variants={TEXT_GROUP_VARIANTS}>
                     <motion.h3 
                       variants={CONTENT_VARIANTS} 
-                      className="text-xl md:text-2xl font-serif font-medium mb-4"
+                      className="text-h3 font-serif font-medium mb-4"
                     >
                       {service.title}
                     </motion.h3>
                     
                     <motion.p 
                       variants={CONTENT_VARIANTS} 
-                      className={`text-3xl font-light mb-8 flex items-baseline ${isFeatured ? 'text-white' : 'text-primary'}`}
+                      className={`text-h2 font-light mb-8 flex items-baseline ${isFeatured ? 'text-white' : 'text-primary'}`}
                     >
                         {service.price}
                     </motion.p>
                     
                     <motion.p 
                       variants={CONTENT_VARIANTS} 
-                      className={`text-sm mb-10 leading-relaxed font-light ${isFeatured ? 'text-white/80' : 'text-secondary'}`}
+                      className={`text-body mb-10 font-light ${isFeatured ? 'text-white/80' : 'text-secondary'}`}
                     >
                         {service.description}
                     </motion.p>
@@ -157,7 +157,7 @@ const Services: React.FC = () => {
                           className="flex items-start"
                         >
                             <Check className={`w-4 h-4 mr-4 flex-shrink-0 ${isFeatured ? 'text-white/70' : 'text-secondary'}`} />
-                            <span className="text-sm tracking-wide">{feature}</span>
+                            <span className="text-small tracking-wide">{feature}</span>
                         </motion.li>
                         ))}
                     </ul>
@@ -177,7 +177,7 @@ const Services: React.FC = () => {
           </AnimatePresence>
         </motion.div>
 
-        <div className="mt-24 md:mt-40">
+        <div className="mt-section-sm md:mt-section">
             <SectionTitle subtitle="Workflow" title="O Processo" />
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 mt-12 md:mt-20">
                 {WORKFLOW_STEPS.map((item, idx) => (
@@ -192,8 +192,8 @@ const Services: React.FC = () => {
                         <div className="w-12 h-12 rounded-full border border-accent flex items-center justify-center mx-auto mb-6 text-serif font-serif italic text-xl text-secondary group-hover:border-primary group-hover:text-primary transition-colors duration-500 bg-transparent group-hover:bg-accent/10">
                             {item.step}
                         </div>
-                        <h4 className="text-lg font-bold mb-3 text-primary group-hover:translate-y-[-2px] transition-transform duration-300">{item.title}</h4>
-                        <p className="text-secondary text-sm leading-relaxed font-light">{item.desc}</p>
+                        <h4 className="text-body-lg font-bold mb-3 text-primary group-hover:translate-y-[-2px] transition-transform duration-300">{item.title}</h4>
+                        <p className="text-secondary text-small leading-relaxed font-light">{item.desc}</p>
                     </motion.div>
                 ))}
             </div>

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { NavLink as RouterNavLink, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { NAV_LINKS, CONTACT_INFO, SOCIAL_LINKS } from '../constants';
 import Button from './Button';
 
@@ -14,10 +14,10 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   
-  // Parallax Footer Animations
-  const { scrollYProgress } = useScroll();
-  const footerOpacity = useTransform(scrollYProgress, [0.9, 1], [0.5, 1]);
-  const footerScale = useTransform(scrollYProgress, [0.95, 1], [0.98, 1]);
+  // Footer Reveal Logic
+  // We use a fixed footer at z-0, and the main content at z-10 with a margin-bottom equal to footer height.
+  // Since footer height is variable, we'd typically measure it. For simplicity in this stack, we'll use a min-height approach
+  // and ensure the main content has a background to cover it.
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,7 +29,6 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isScrolled]);
 
-  // Close mobile menu on route change
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location]);
@@ -135,24 +134,28 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         )}
       </AnimatePresence>
 
-      {/* Main Content */}
-      <main className="relative z-10 w-full bg-background shadow-2xl min-h-screen">
+      {/* 
+        Main Content 
+        z-10 and bg-background are crucial for the footer reveal effect.
+        mb-[60vh] reserves space for the fixed footer to be revealed.
+      */}
+      <main className="relative z-10 w-full bg-background shadow-2xl mb-[50vh] md:mb-[60vh] rounded-b-[3rem] overflow-hidden">
         {children}
       </main>
 
-      {/* Sticky Footer */}
+      {/* 
+        Sticky Reveal Footer 
+        Fixed at bottom, z-0. The main content scrolls UP to reveal this.
+      */}
       <footer 
-        className="sticky bottom-0 left-0 right-0 z-0 bg-surface text-secondary flex items-center min-h-[50vh] md:min-h-[60vh]"
+        className="fixed bottom-0 left-0 right-0 z-0 bg-surface text-secondary flex items-center h-[50vh] md:h-[60vh]"
       >
-        <motion.div 
-          style={{ opacity: footerOpacity, scale: footerScale }}
-          className="w-full h-full flex flex-col justify-between py-12 md:py-20"
-        >
+        <div className="w-full h-full flex flex-col justify-between py-section-sm md:py-section">
           <div className="container grid grid-cols-1 md:grid-cols-12 gap-12 relative z-10 h-full flex-grow">
             <div className="md:col-span-6 lg:col-span-5 flex flex-col justify-between">
               <div>
-                  <h3 className="text-5xl md:text-9xl font-serif italic font-light mb-8 text-primary/5 select-none tracking-tighter">LUMINA</h3>
-                  <p className="text-secondary text-sm leading-relaxed max-w-sm font-light tracking-wide border-l border-accent/30 pl-6">
+                  <h3 className="text-mega font-serif italic font-light mb-8 text-primary/5 select-none tracking-tighter">LUMINA</h3>
+                  <p className="text-secondary text-small leading-relaxed max-w-sm font-light tracking-wide border-l border-accent/30 pl-6">
                   Um estúdio de narrativa visual. Baseado na luz, enraizado na emoção. Documentamos o não roteirizado e o profundo.
                   </p>
               </div>
@@ -160,7 +163,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             
             <div className="md:col-span-3 lg:col-span-3 md:col-start-8 lg:col-start-8 flex flex-col justify-center">
               <h4 className="text-micro font-bold uppercase mb-8 text-primary/40 tracking-widest">Estúdio</h4>
-              <div className="space-y-4 text-sm font-light tracking-wide flex flex-col items-start">
+              <div className="space-y-4 text-small font-light tracking-wide flex flex-col items-start">
                 <p className="text-primary">{CONTACT_INFO.location}</p>
                 <a href={`mailto:${CONTACT_INFO.email}`} className="block text-secondary hover:text-primary transition-colors border-b border-transparent hover:border-primary pb-0.5">{CONTACT_INFO.email}</a>
                 <a href={`tel:${CONTACT_INFO.phone}`} className="block text-secondary hover:text-primary transition-colors">{CONTACT_INFO.phone}</a>
@@ -176,7 +179,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                     href={social.url}
                     target="_blank"
                     rel="noopener noreferrer" 
-                    className="text-secondary opacity-70 hover:opacity-100 text-sm block hover:translate-x-2 transition-transform duration-300"
+                    className="text-secondary opacity-70 hover:opacity-100 text-small block hover:translate-x-2 transition-transform duration-300"
                   >
                     {social.label}
                   </a>
@@ -192,7 +195,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
               <button className="hover:text-primary transition-colors">Termos</button>
             </div>
           </div>
-        </motion.div>
+        </div>
       </footer>
     </div>
   );

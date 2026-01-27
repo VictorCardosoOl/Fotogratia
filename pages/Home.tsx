@@ -13,6 +13,7 @@ import Magnetic from '../components/Magnetic';
 import SplitText from '../components/SplitText';
 import PinnedProjectShowcase from '../components/PinnedProjectShowcase';
 import HorizontalGallery from '../components/HorizontalGallery';
+import ParallaxImage from '../components/ParallaxImage';
 import { SERVICES } from '../constants';
 
 if (typeof window !== 'undefined') {
@@ -30,26 +31,22 @@ const Home: React.FC = () => {
   useGSAP(() => {
     if (!heroBgRef.current || !heroTextRef.current) return;
 
-    gsap.set(heroBgRef.current, { scale: 1.3, filter: "blur(8px)" });
+    gsap.set(heroBgRef.current, { scale: 1.25 });
     
-    gsap.to(heroBgRef.current, { 
-      scale: 1.1, 
-      filter: "blur(0px)", 
-      duration: 2.2, 
-      ease: "power2.inOut" 
-    });
-
+    // Parallax Effect on Hero Background
     gsap.to(heroBgRef.current, {
-      yPercent: 25, 
+      yPercent: 30, 
+      scale: 1.1,
       ease: "none",
       scrollTrigger: {
         trigger: heroRef.current,
         start: "top top",
         end: "bottom top",
-        scrub: 1.5 
+        scrub: true 
       }
     });
 
+    // Fade out text on scroll
     gsap.to(heroTextRef.current, {
       yPercent: 50,
       opacity: 0,
@@ -58,7 +55,7 @@ const Home: React.FC = () => {
         trigger: heroRef.current,
         start: "top top",
         end: "60% top",
-        scrub: 1
+        scrub: true
       }
     });
 
@@ -96,18 +93,18 @@ const Home: React.FC = () => {
                   </div>
                   
                   <div className="mb-8 md:mb-10 mix-blend-screen overflow-hidden">
-                     <SplitText tag="h1" delay={0.3} className="text-fluid-h1 font-serif font-thin italic tracking-tighter text-white leading-[0.9]">
+                     <SplitText tag="h1" delay={0.3} className="text-display font-serif font-thin italic tracking-tighter text-white">
                         Luz & Sombra
                      </SplitText>
                   </div>
                   
-                  <p className="text-sm md:text-lg text-white/70 mb-10 md:mb-12 max-w-md font-light leading-relaxed tracking-wide mx-auto md:mx-0">
+                  <p className="text-body-lg text-white/70 mb-10 md:mb-12 max-w-md font-light mx-auto md:mx-0">
                      Não apenas tiramos fotos. Curamos momentos de emoção crua, enquadrando a beleza não roteirizada da existência.
                   </p>
                   
                   <div className="flex flex-col sm:flex-row items-center gap-8 pointer-events-auto">
                     <Magnetic strength={40}>
-                      <Button onClick={() => navigate('/portfolio')} className="border-b border-white hover:border-accent text-white pb-1 px-0 rounded-none bg-transparent hover:bg-transparent tracking-widest text-xs">
+                      <Button onClick={() => navigate('/portfolio')} className="border-b border-white hover:border-accent text-white pb-1 px-0 rounded-none bg-transparent hover:bg-transparent tracking-widest text-micro">
                           Acessar Galeria
                       </Button>
                     </Magnetic>
@@ -121,11 +118,11 @@ const Home: React.FC = () => {
         </section>
 
         {/* Brand Bar */}
-        <section className="bg-background py-16 border-b border-muted relative z-20">
+        <section className="bg-background py-section-sm border-b border-muted relative z-20">
           <div className="container">
             <div className="flex flex-wrap justify-center gap-x-12 gap-y-6 opacity-40 hover:opacity-100 transition-opacity duration-700">
                {['VOGUE', 'KINFOLK', 'CEREAL', 'AESTHETICA'].map(brand => (
-                   <span key={brand} className="text-xs font-sans font-medium tracking-[0.3em] text-primary cursor-default hover:text-accent transition-colors duration-500">{brand}</span>
+                   <span key={brand} className="text-micro font-sans font-medium tracking-[0.3em] text-primary cursor-default hover:text-accent transition-colors duration-500">{brand}</span>
                ))}
             </div>
           </div>
@@ -135,14 +132,17 @@ const Home: React.FC = () => {
         <PinnedProjectShowcase />
 
         {/* Manifesto Section */}
-        <section className="py-24 md:py-32 bg-background relative z-20">
+        <section className="py-section bg-background relative z-20">
           <div className="container">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
               <div className="lg:col-span-4">
                   <SectionTitle subtitle="Manifesto" title="A Arte da Observação" alignment="left" />
+                  <div className="mt-12 hidden lg:block">
+                     <ParallaxImage src="https://picsum.photos/600/800?grayscale" alt="Abstract Texture" />
+                  </div>
               </div>
               <div className="lg:col-span-8 lg:pl-12 pt-8">
-                  <div className="text-xl md:text-3xl font-serif text-primary/80 leading-relaxed font-light italic">
+                  <div className="text-h2 font-serif text-primary/80 font-light italic leading-tight">
                       "Em um mundo de ruído, buscamos o silêncio. O olhar sutil, a textura do tecido, a forma como a luz cai sobre um ombro."
                   </div>
                   
@@ -158,7 +158,7 @@ const Home: React.FC = () => {
                       >
                           <feature.icon className="w-5 h-5 text-secondary mb-4 group-hover:text-primary transition-colors" />
                           <h3 className="text-primary font-semibold tracking-widest text-micro uppercase mb-2">{feature.title}</h3>
-                          <p className="text-secondary text-sm font-light leading-relaxed">{feature.desc}</p>
+                          <p className="text-secondary text-body font-light">{feature.desc}</p>
                       </div>
                       ))}
                   </div>
@@ -171,7 +171,7 @@ const Home: React.FC = () => {
         <HorizontalGallery />
 
         {/* Services Teaser */}
-        <section className="py-24 md:py-32 bg-surface relative border-t border-muted z-20">
+        <section className="py-section bg-surface relative border-t border-muted z-20">
           <div className="container relative z-10">
               <div className="max-w-4xl mx-auto">
                   <SectionTitle subtitle="Ofertas" title="Comissões" />
@@ -184,10 +184,10 @@ const Home: React.FC = () => {
                               onClick={() => navigate('/services')}
                           >
                               <div className="flex flex-col md:flex-row md:items-baseline justify-between mb-4">
-                                  <h3 className="text-3xl md:text-4xl font-serif italic text-primary group-hover:text-accent transition-colors duration-300">{s.title}</h3>
-                                  <span className="text-xs font-mono text-secondary mt-2 md:mt-0">{s.price}</span>
+                                  <h3 className="text-h2 font-serif italic text-primary group-hover:text-accent transition-colors duration-300">{s.title}</h3>
+                                  <span className="text-small font-mono text-secondary mt-2 md:mt-0">{s.price}</span>
                               </div>
-                              <p className="text-secondary font-light max-w-lg transition-opacity duration-300 opacity-60 group-hover:opacity-100">{s.description}</p>
+                              <p className="text-secondary text-body font-light max-w-lg transition-opacity duration-300 opacity-60 group-hover:opacity-100">{s.description}</p>
                           </div>
                       ))}
                   </div>
@@ -196,11 +196,11 @@ const Home: React.FC = () => {
         </section>
 
         {/* Final CTA */}
-        <section className="py-32 bg-background z-20 relative">
+        <section className="py-section-lg bg-background z-20 relative rounded-b-[3rem]">
           <div className="container text-center max-w-2xl">
             <Reveal width="100%">
               <p className="text-secondary text-micro tracking-widest uppercase mb-6">Agenda 2024 / 2025</p>
-              <h2 className="text-fluid-h2 font-serif italic mb-12 text-primary">
+              <h2 className="text-h1 font-serif italic mb-12 text-primary">
                   Conte sua história.
               </h2>
             </Reveal>

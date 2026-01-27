@@ -33,8 +33,8 @@ const Portfolio: React.FC = () => {
 
   return (
     <Layout>
-      {/* Padded for fixed header (approx 120px) */}
-      <div className="bg-background text-primary pt-32 md:pt-40 pb-16 md:pb-20 relative border-b border-muted/50">
+      {/* Padded for fixed header */}
+      <div className="bg-background text-primary pt-32 md:pt-40 pb-section-sm relative border-b border-muted/50">
         <div className="container flex flex-col md:flex-row justify-between items-end relative z-10">
           <div>
               <motion.span 
@@ -45,7 +45,7 @@ const Portfolio: React.FC = () => {
                   Trabalhos Curados
               </motion.span>
               <div className="overflow-hidden">
-                <SplitText tag="h1" className="text-fluid-h1 font-serif italic text-primary tracking-tighter">
+                <SplitText tag="h1" className="text-display font-serif italic text-primary tracking-tighter">
                     Arquivo
                 </SplitText>
               </div>
@@ -54,14 +54,14 @@ const Portfolio: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
-            className="text-secondary max-w-xs text-sm font-light mt-8 md:mt-0 text-right leading-relaxed"
+            className="text-secondary max-w-xs text-body font-light mt-8 md:mt-0 text-right"
           >
             Uma coleção de memórias visuais, processadas com cuidado e intenção cinematográfica.
           </motion.p>
         </div>
       </div>
 
-      <div className="min-h-screen bg-background pt-16 pb-24">
+      <div className="min-h-screen bg-background pt-16 pb-section">
         <div className="container">
             
           <div className="flex flex-wrap gap-x-8 gap-y-4 mb-20 items-center justify-center md:justify-start">
@@ -103,7 +103,7 @@ const Portfolio: React.FC = () => {
 
           <motion.div 
             layout
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gap-grid"
           >
             <AnimatePresence mode="popLayout">
               {filteredPhotos.map((photo, index) => (
@@ -132,7 +132,7 @@ const Portfolio: React.FC = () => {
                       <div className="absolute inset-0 flex flex-col justify-end p-8 opacity-0 group-hover:opacity-100 transition-opacity duration-700 delay-100">
                            <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-700 ease-[0.22,1,0.36,1]">
                                 <span className="text-[10px] uppercase tracking-[0.25em] text-white/80 block mb-2">{photo.category}</span>
-                                <h3 className="text-2xl md:text-3xl font-serif italic text-white font-light">{photo.title}</h3>
+                                <h3 className="text-h3 font-serif italic text-white font-light">{photo.title}</h3>
                            </div>
                       </div>
                   </div>
@@ -145,10 +145,10 @@ const Portfolio: React.FC = () => {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="mt-32 md:mt-40 text-center border-t border-muted/50 pt-20"
+            className="mt-section text-center border-t border-muted/50 pt-section-sm"
           >
-            <h3 className="text-fluid-h3 font-serif italic text-primary mb-6">Crie conosco.</h3>
-            <Button variant="text" onClick={() => navigate('/contact')} className="text-lg text-primary hover:text-accent">Iniciar Projeto</Button>
+            <h3 className="text-h2 font-serif italic text-primary mb-6">Crie conosco.</h3>
+            <Button variant="text" onClick={() => navigate('/contact')} className="text-body-lg text-primary hover:text-accent">Iniciar Projeto</Button>
           </motion.div>
         </div>
       </div>
