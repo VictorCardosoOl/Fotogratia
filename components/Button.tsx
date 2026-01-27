@@ -9,12 +9,12 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
 }
 
-const BASE_STYLES = "relative inline-flex items-center justify-center px-8 py-4 text-[10px] uppercase tracking-[0.2em] font-medium transition-colors duration-500 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden group";
+const BASE_STYLES = "relative inline-flex items-center justify-center px-8 py-4 text-[11px] uppercase tracking-[0.25em] font-medium transition-colors duration-500 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden group";
 
 const VARIANTS_STYLES = {
   primary: "bg-primary text-white border border-primary hover:bg-transparent hover:text-primary rounded-none",
-  outline: "border border-primary text-primary bg-transparent hover:bg-primary hover:text-white rounded-none",
-  text: "text-primary p-0 font-serif italic text-sm tracking-normal capitalize bg-transparent hover:text-accent"
+  outline: "border border-primary/20 text-primary bg-transparent hover:border-primary hover:bg-primary hover:text-white rounded-none",
+  text: "text-primary p-0 font-serif italic text-base tracking-normal capitalize bg-transparent hover:text-accent"
 } as const;
 
 const TEXT_SLIDE_VARIANTS: Variants = {
@@ -59,7 +59,7 @@ const Button: React.FC<ButtonProps> = ({
               <span className="absolute left-0 bottom-0 w-full h-px bg-accent origin-left scale-x-0 transition-transform duration-500 ease-[0.22,1,0.36,1] group-hover:scale-x-100" />
             </span>
             {withArrow && (
-              <ArrowRight className="w-3 h-3 transition-transform duration-500 ease-[0.22,1,0.36,1] group-hover:translate-x-1" />
+              <ArrowRight className="w-4 h-4 transition-transform duration-500 ease-[0.22,1,0.36,1] group-hover:translate-x-1 font-light" />
             )}
         </span>
       </motion.button>
@@ -92,7 +92,7 @@ const Button: React.FC<ButtonProps> = ({
       )}
       
       {/* Content wrapper */}
-      <span className={`relative z-10 flex items-center ${variant === 'outline' ? 'mix-blend-normal' : ''}`}>
+      <span className={`relative z-10 flex items-center gap-4 ${variant === 'outline' ? 'mix-blend-normal' : 'mix-blend-difference'}`}>
         <div className="relative overflow-hidden h-4 flex items-center">
             <motion.div variants={TEXT_SLIDE_VARIANTS} transition={TRANSITION_CONFIG}>
                 {children}
@@ -102,14 +102,14 @@ const Button: React.FC<ButtonProps> = ({
                 variants={TEXT_REVEAL_VARIANTS}
                 transition={TRANSITION_CONFIG}
             >
-                 <span className={variant === 'primary' ? "text-primary" : "text-white"}>
+                 <span className={variant === 'primary' ? "text-white group-hover:text-primary" : "text-white"}>
                    {children}
                  </span>
             </motion.div>
         </div>
         
         {withArrow && (
-            <ArrowRight className="w-3 h-3 ml-4 opacity-70" />
+            <ArrowRight className="w-3 h-3 opacity-70 group-hover:opacity-100 transition-opacity" />
         )}
       </span>
     </motion.button>

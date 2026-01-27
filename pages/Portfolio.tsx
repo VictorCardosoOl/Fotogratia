@@ -34,7 +34,7 @@ const Portfolio: React.FC = () => {
   return (
     <Layout>
       {/* Padded for fixed header (approx 120px) */}
-      <div className="bg-background text-primary pt-32 md:pt-40 pb-16 md:pb-20 relative border-b border-primary/5">
+      <div className="bg-background text-primary pt-32 md:pt-40 pb-16 md:pb-20 relative border-b border-muted/50">
         <div className="container flex flex-col md:flex-row justify-between items-end relative z-10">
           <div>
               <motion.span 
@@ -54,7 +54,7 @@ const Portfolio: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
-            className="text-secondary max-w-xs text-sm font-light mt-8 md:mt-0 text-right"
+            className="text-secondary max-w-xs text-sm font-light mt-8 md:mt-0 text-right leading-relaxed"
           >
             Uma coleção de memórias visuais, processadas com cuidado e intenção cinematográfica.
           </motion.p>
@@ -64,17 +64,20 @@ const Portfolio: React.FC = () => {
       <div className="min-h-screen bg-background pt-16 pb-24">
         <div className="container">
             
-          <div className="flex flex-wrap gap-x-8 gap-y-4 mb-20 items-center">
+          <div className="flex flex-wrap gap-x-8 gap-y-4 mb-20 items-center justify-center md:justify-start">
             <span className="text-secondary/50 text-micro uppercase tracking-widest mr-4">Filtrar Por:</span>
             <button
                 onClick={clearFilters}
-                className={`text-micro uppercase tracking-[0.2em] transition-all duration-300 border-b border-transparent ${
+                className={`text-micro uppercase tracking-[0.2em] transition-all duration-300 relative px-2 py-1 ${
                 activeCategories.length === 0
-                    ? 'text-primary border-accent font-bold'
+                    ? 'text-primary font-bold'
                     : 'text-secondary hover:text-primary'
                 }`}
             >
                 Todos
+                {activeCategories.length === 0 && (
+                    <motion.div layoutId="underline" className="absolute bottom-0 left-0 w-full h-px bg-primary" />
+                )}
             </button>
 
             {CATEGORIES.map((cat) => {
@@ -83,13 +86,16 @@ const Portfolio: React.FC = () => {
                 <button
                     key={cat}
                     onClick={() => toggleCategory(cat)}
-                    className={`text-micro uppercase tracking-[0.2em] transition-all duration-300 border-b border-transparent ${
+                    className={`text-micro uppercase tracking-[0.2em] transition-all duration-300 relative px-2 py-1 ${
                     isActive
-                        ? 'text-primary border-accent font-bold'
+                        ? 'text-primary font-bold'
                         : 'text-secondary hover:text-primary'
                     }`}
                 >
                     {cat}
+                    {isActive && (
+                        <motion.div layoutId={`underline-${cat}`} className="absolute bottom-0 left-0 w-full h-px bg-primary" />
+                    )}
                 </button>
                 );
             })}
@@ -103,33 +109,32 @@ const Portfolio: React.FC = () => {
               {filteredPhotos.map((photo, index) => (
                 <motion.div 
                   layout
-                  initial={{ opacity: 0, y: 50, filter: 'blur(10px)' }}
-                  animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                  exit={{ opacity: 0, filter: 'blur(5px)', scale: 0.95, transition: { duration: 0.3 } }}
+                  initial={{ opacity: 0, y: 50 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.3 } }}
                   transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                   key={photo.id} 
-                  className={`break-inside-avoid group relative cursor-pointer ${getGridClass(index)}`}
+                  className={`break-inside-avoid group relative cursor-pointer overflow-hidden ${getGridClass(index)}`}
                 >
-                  <div className="w-full h-full overflow-hidden relative bg-surface shadow-md">
+                  {/* Container for Image & Overlay */}
+                  <div className="w-full h-full relative overflow-hidden bg-muted">
                       <img 
                         src={photo.url} 
                         alt={photo.title} 
-                        className="w-full h-full object-cover grayscale-[80%] group-hover:grayscale-0 scale-100 group-hover:scale-105 transition-all duration-[1s] ease-[0.22,1,0.36,1]"
+                        className="w-full h-full object-cover transition-all duration-[1.2s] ease-[0.22,1,0.36,1] grayscale-[20%] group-hover:grayscale-0 group-hover:scale-105"
                         loading="lazy"
                       />
-                      <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-700 pointer-events-none" />
-                  </div>
-
-                  <div className="absolute bottom-6 left-6 right-6 flex justify-between items-end overflow-hidden pointer-events-none">
-                    <div className="transform translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-700 ease-[0.22,1,0.36,1]">
-                         <h3 className="text-xl md:text-2xl font-serif italic text-white drop-shadow-md">{photo.title}</h3>
-                    </div>
-                    
-                    <div className="transform translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-700 delay-75 ease-[0.22,1,0.36,1]">
-                        <span className="text-[9px] uppercase tracking-widest text-white border border-white/50 px-2 py-1 rounded-full backdrop-blur-sm bg-black/20">
-                            {photo.category}
-                        </span>
-                    </div>
+                      
+                      {/* Premium Overlay: Gradient only at bottom, fading in properly */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-in-out" />
+                      
+                      {/* Content positioned absolutely */}
+                      <div className="absolute inset-0 flex flex-col justify-end p-8 opacity-0 group-hover:opacity-100 transition-opacity duration-700 delay-100">
+                           <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-700 ease-[0.22,1,0.36,1]">
+                                <span className="text-[10px] uppercase tracking-[0.25em] text-white/80 block mb-2">{photo.category}</span>
+                                <h3 className="text-2xl md:text-3xl font-serif italic text-white font-light">{photo.title}</h3>
+                           </div>
+                      </div>
                   </div>
                 </motion.div>
               ))}
@@ -140,7 +145,7 @@ const Portfolio: React.FC = () => {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="mt-32 md:mt-40 text-center border-t border-primary/5 pt-20"
+            className="mt-32 md:mt-40 text-center border-t border-muted/50 pt-20"
           >
             <h3 className="text-fluid-h3 font-serif italic text-primary mb-6">Crie conosco.</h3>
             <Button variant="text" onClick={() => navigate('/contact')} className="text-lg text-primary hover:text-accent">Iniciar Projeto</Button>
