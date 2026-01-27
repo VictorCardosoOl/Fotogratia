@@ -155,7 +155,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
            </h1>
         </div>
 
-        <div className="w-full h-full flex flex-col py-section-sm md:py-12 relative z-10">
+        <div className="w-full h-full flex flex-col py-12 relative z-10">
           <div className="container grid grid-cols-1 md:grid-cols-12 gap-12 flex-grow">
             
             {/* Column 1: Brand & Desc */}
